@@ -1,23 +1,24 @@
 import type { NextConfig } from "next";
 
-const supabaseHost =
-  process.env.NEXT_PUBLIC_SUPABASE_URL != null
-    ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
-    : "";
+function getSupabaseHost(): string {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!url || typeof url !== "string") return "";
+  try {
+    return new URL(url).hostname;
+  } catch {
+    return "";
+  }
+}
 
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "lh3.googleusercontent.com",
-        pathname: "/**",
-      },
-      ...(supabaseHost
+      { protocol: "https", hostname: "lh3.googleusercontent.com", pathname: "/**" },
+      ...(getSupabaseHost()
         ? [
             {
-              protocol: "https",
-              hostname: supabaseHost,
+              protocol: "https" as const,
+              hostname: getSupabaseHost(),
               pathname: "/storage/v1/object/public/**",
             },
           ]
