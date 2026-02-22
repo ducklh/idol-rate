@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Idol Rate
 
-## Getting Started
+Ứng dụng đánh giá thần tượng với Next.js, Supabase và Google OAuth.
 
-First, run the development server:
+## Chạy local
+
+1. Copy env mẫu và điền Supabase:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Cài dependency và chạy:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Mở [http://localhost:3000](http://localhost:3000).
 
-## Learn More
+## Deploy lên Vercel
 
-To learn more about Next.js, take a look at the following resources:
+### 1. Đẩy code lên GitHub
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Đảm bảo repo đã push lên GitHub (hoặc GitLab/Bitbucket nếu Vercel hỗ trợ).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. Tạo project trên Vercel
 
-## Deploy on Vercel
+- Vào [vercel.com](https://vercel.com) → **Add New** → **Project**.
+- Import repo GitHub của bạn.
+- **Framework Preset**: Next.js (tự nhận).
+- **Root Directory**: để trống (hoặc thư mục gốc của app).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. Cấu hình Environment Variables
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Trong bước thiết lập project (hoặc sau khi tạo: **Settings** → **Environment Variables**), thêm:
+
+| Name | Value | Ghi chú |
+|------|--------|--------|
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://xxxx.supabase.co` | Supabase Dashboard → Project Settings → API |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `eyJhbG...` | Cùng trang API, mục "anon public" |
+
+Chọn **Production**, **Preview**, **Development** nếu muốn dùng cho mọi môi trường → **Save**.
+
+### 4. Deploy
+
+Bấm **Deploy**. Vercel sẽ build và cho bạn URL dạng `https://idol-rate-xxx.vercel.app`.
+
+### 5. Cấu hình Supabase cho production
+
+Để Google đăng nhập hoạt động trên domain Vercel:
+
+1. **Supabase Dashboard** → **Authentication** → **URL Configuration**.
+2. Trong **Redirect URLs** thêm URL callback của Vercel, ví dụ:
+   - `https://idol-rate-xxx.vercel.app/auth/callback`
+   - Hoặc custom domain: `https://yourdomain.com/auth/callback`
+3. **Save**.
+
+Sau khi deploy, kiểm tra đăng nhập Google và trang `/admin` trên domain Vercel.

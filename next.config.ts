@@ -10,15 +10,16 @@ function getSupabaseHost(): string {
   }
 }
 
+const supabaseHost = getSupabaseHost();
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "lh3.googleusercontent.com", pathname: "/**" },
-      ...(getSupabaseHost()
+      ...(supabaseHost
         ? [
             {
               protocol: "https" as const,
-              hostname: getSupabaseHost(),
+              hostname: supabaseHost,
               pathname: "/storage/v1/object/public/**",
             },
           ]
